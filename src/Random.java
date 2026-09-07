@@ -1,0 +1,6 @@
+/**
+ * Random
+ */
+public class Random {
+
+}

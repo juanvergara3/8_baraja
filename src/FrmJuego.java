@@ -106,7 +106,21 @@ public class FrmJuego extends JFrame {
     }
 
     private void calcularPuntajes() {
+        String puntaje = "";
 
-        JOptionPane.showMessageDialog(null, "Puntajes calculados (PLACEHOLDER).");
+        switch (tpJugadores.getSelectedIndex()) {
+            case 0:
+                puntaje = jugador1.getPuntaje();
+                break;
+            case 1:
+                puntaje = jugador2.getPuntaje();
+                break;
+        } 
+
+        if (puntaje.isEmpty()) {
+            puntaje = "El jugador tiene 0 puntos.";
+        } 
+
+        JOptionPane.showMessageDialog(null, puntaje);
     }
 }

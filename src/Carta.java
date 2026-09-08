@@ -10,6 +10,7 @@ import enums.Pinta;
 
 public class Carta {
     private int indice;
+    private boolean punteable = true;
 
     public Carta(Random r) {
         indice = r.nextInt(52) + 1;
@@ -52,5 +53,13 @@ public class Carta {
             residuo = 13; // Ajustar para que el índice 13 corresponda a KING
         }
         return NombreCarta.values()[residuo - 1];
+    }
+
+    public boolean isPunteable() {
+        return punteable;
+    }
+
+    public void setPunteable(boolean punteable) {
+        this.punteable = punteable;
     }
 }

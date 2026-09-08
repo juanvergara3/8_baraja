@@ -85,4 +85,18 @@ public class Jugador {
 
         return respuesta;
     }
+
+    public String getPuntaje() {
+        String respuesta = "Puntaje del jugador: 0 puntos.";
+        int totalPuntaje = 0;
+
+        for (Carta crt: cartas) {
+            if (crt.isPunteable()) {
+                totalPuntaje += crt.getNombre().getValor();
+            }
+        }
+
+        respuesta = "Puntaje del jugador: " + totalPuntaje + " puntos.";
+        return respuesta;
+    }
 }

@@ -11,6 +11,8 @@ public class FrmJuego extends JFrame {
     Jugador jugador1 = new Jugador();
     Jugador jugador2 = new Jugador();
     JTabbedPane tpJugadores;
+    JButton btnVerificar, btnPuntaje;
+
 
     public FrmJuego() {
         setTitle("Juego");
@@ -22,9 +24,18 @@ public class FrmJuego extends JFrame {
         btnRepartir.setBounds(10, 10, 100, 25);
         add(btnRepartir);
 
-        JButton btnVerificar = new JButton("Verificar");
+        // El botón está deshabilitado hasta que se haga la repartición de cartas
+        // Este era un error en el código original, si de daba click en el botón de verificar antes de repartir, se lanzaba una excepción porque el arreglo de cartas estaba vacío.
+        btnVerificar = new JButton("Verificar");
         btnVerificar.setBounds(120, 10, 100, 25);
+        btnVerificar.setEnabled(false);
         add(btnVerificar);
+
+        // El botón está deshabilitado inicialmente y se habilitará después de repartir las cartas y verificar los grupos y escaleras
+        btnPuntaje = new JButton("Calcular Puntajes");
+        btnPuntaje.setBounds(230, 10, 150, 25);
+        btnPuntaje.setEnabled(false);
+        add(btnPuntaje);
 
         // paneles agrupados en pestañas
         tpJugadores = new JTabbedPane();
@@ -50,6 +61,10 @@ public class FrmJuego extends JFrame {
         btnVerificar.addActionListener(e -> {
             verificar();
         });
+
+        btnPuntaje.addActionListener(e -> {
+            calcularPuntajes();
+        });
     }
 
     private void repartir() {
@@ -58,6 +73,12 @@ public class FrmJuego extends JFrame {
         
         jugador2.repartirCartas();
         jugador2.mostrar(pnlJugador2);
+
+        // Habilitar el botón de verificar después de repartir las cartas
+        btnVerificar.setEnabled(true);
+
+        // si se está repartiendo nuevamente, se deshabilita el botón de calcular puntajes para evitar que se calculen puntajes de una mano anterior
+        btnPuntaje.setEnabled(false); 
     }
 
     private void verificar() {
@@ -79,5 +100,13 @@ public class FrmJuego extends JFrame {
         } 
 
         JOptionPane.showMessageDialog(null, gruposEncontrados + "\n" + escalerasEncontradas);
+
+        // Habilitar el botón de calcular puntajes después de verificar los grupos y escaleras
+        btnPuntaje.setEnabled(true);
+    }
+
+    private void calcularPuntajes() {
+
+        JOptionPane.showMessageDialog(null, "Puntajes calculados (PLACEHOLDER).");
     }
 }

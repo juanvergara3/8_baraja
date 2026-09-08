@@ -15,6 +15,11 @@ public class Carta {
         indice = r.nextInt(52) + 1;
     }
 
+    // overloading de constructor para crear cartas específicas en lugar de aleatorias
+    public Carta(int indice) {
+        this.indice = indice;
+    }
+
     public void mostrar(JPanel pnl, int x, int y) {
         String path = "images/CARTA" + indice + ".JPG";
         ImageIcon imgCarta = new ImageIcon(getClass().getResource(path));

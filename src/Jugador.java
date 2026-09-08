@@ -57,4 +57,32 @@ public class Jugador {
 
         return respuesta;
     }
+
+    // este método toma un approch muy parecido al de getGrupos, para que se reinventar la rueda?
+    public String getEscaleras() {
+        String respuesta = "No se han encontrado escaleras.";
+
+        // int[] contadores = new int[NombreCarta.values().length];
+
+        // boolean hayEscaleras = false;
+        // for (Carta crt: cartas) {
+        //     int posicion = crt.getNombre().ordinal();
+        //     contadores[posicion]++;
+
+        //     if (!hayEscaleras && contadores[posicion] >= 2) 
+        //         hayEscaleras = true;
+        // }
+
+        // if (hayEscaleras){
+        //     respuesta = "Se han encontrado las siguientes escaleras:\n";
+        //     int index = 0;
+        //     for (int contador : contadores) {
+        //         if (contador >= 2) 
+        //             respuesta += Grupo.values()[contador] + " de " + NombreCarta.values()[index] + "\n";
+        //         index++;
+        //     }
+        // }
+
+        return respuesta;
+    }
 }

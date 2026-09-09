@@ -79,12 +79,13 @@ public class Jugador {
 
     public String getEscaleras() {
         String respuesta = "No se han encontrado escaleras.";
+        int numeroCartas = NombreCarta.values().length;
 
         // se crean los arreglos como matrices de 13x2, donde la primera columna es el nombre de la carta y la segunda columna es el índice de la carta en el arreglo de cartas del jugador. Este último se usa para marcar las cartas que hacen parte de la escalera
-        int escalerasTrebol[][] = new int[13][2];
-        int escalerasPica[][] = new int[13][2];
-        int escalerasCorazon[][] = new int[13][2];
-        int escalerasDiamante[][] = new int[13][2];
+        int escalerasTrebol[][] = new int[numeroCartas][2];
+        int escalerasPica[][] = new int[numeroCartas][2];
+        int escalerasCorazon[][] = new int[numeroCartas][2];
+        int escalerasDiamante[][] = new int[numeroCartas][2];
 
         // se clasifican las cartas por pinta y al mismo tiempo se ordenan por nombre
         for (int i = 0; i < TOTAL_CARTAS; i++) {
@@ -122,8 +123,9 @@ public class Jugador {
 
     private String getEscalerasHelper(int[][] escaleras, Pinta pinta) {
         String escalera = "";
+        int numeroCartas = NombreCarta.values().length;
         // se itera sobre el arreglo que se llenó con los nombres de las cartas por pica
-        for(int i = 0; i < 13; i++) {
+        for(int i = 0; i < numeroCartas; i++) {
 
             // si el valor del arreglo es diferente de cero, y el siguiente valor es diferente de cero, se ha encontrado una escalera
             // se pone una condición i!= 12 para evitar un error de índice fuera de rango
@@ -133,12 +135,12 @@ public class Jugador {
                 // se define una variable que va a ser el nuevo i cuando la escalera termine
                 int new_i = i;
                 // se recorre el arreglo hasta el final o hasta que el valor actual sea cero (se termine la escalera)
-                for(int j = i; j < 13 && escaleras[j][0] != 0; j++) {
+                for(int j = i; j < numeroCartas && escaleras[j][0] != 0; j++) {
                     // se agrega la carta a la escalera
                     escalera += NombreCarta.values()[j] + "";
                     cartas[escaleras[j][1]].setPunteable(false);
                     // se agrega una flecha si no es la última carta de la escalera
-                    if (j != 12 && escaleras[j+1][0] != 0) 
+                    if (j != numeroCartas - 1 && escaleras[j+1][0] != 0) 
                         escalera += "->";
                     // se actualiza el nuevo i para que cuando termine la escalera, el for principal continue desde la última carta de la escalera
                     new_i = j+1;

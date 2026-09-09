@@ -34,31 +34,47 @@ public class Jugador {
     public String getGrupos() {
         String respuesta = "No se han encontrado grupos.";
 
-        // arreglo de contadores para cada nombre de carta
-        int[] contadores = new int[NombreCarta.values().length];
-
-        boolean hayGrupos = false;
-        for (Carta crt: cartas) {
-            int posicion = crt.getNombre().ordinal();
-            contadores[posicion]++;
-
-            if (!hayGrupos && contadores[posicion] >= 2) 
-                hayGrupos = true;
+        // se cambia totalmente este arreglo para usar una clase nueva, la cual tiene un contador y un arreglo de índices de cartas, para poder marcar las cartas que forman parte del grupo como no punteables
+        GrupoCartas[] contadores = new GrupoCartas[NombreCarta.values().length];
+        // se inicializan los contadores
+        for (int i = 0; i < contadores.length; i++) {
+            contadores[i] = new GrupoCartas(TOTAL_CARTAS);
         }
 
-        //TODO marcar cartas que formen grupos
+        boolean hayGrupos = false;
+        for (int i = 0; i < TOTAL_CARTAS; i++) {
+            Carta crt = cartas[i];
+            int posicion = crt.getNombre().ordinal();
+            contadores[posicion].incrementarContador();
+            contadores[posicion].agregarIndexCarta(i);
+
+            if (!hayGrupos && contadores[posicion].getContador() >= 2) 
+                hayGrupos = true;
+        }
 
         if (hayGrupos){
             respuesta = "Se han encontrado los siguientes grupos:\n";
             int index = 0;
-            for (int contador : contadores) {
-                if (contador >= 2) 
-                    respuesta += Grupo.values()[contador] + " de " + NombreCarta.values()[index] + "\n";
+            for (GrupoCartas contador : contadores) {
+                if (contador.getContador() >= 2) {
+                    respuesta += Grupo.values()[contador.getContador()] + " de " + NombreCarta.values()[index] + "\n";
+                    // se marcan las cartas que forman parte del grupo como no punteables
+                    marcarCartasGrupo(contador);
+                }
                 index++;
             }
         }
 
         return respuesta;
+    }
+
+    private void marcarCartasGrupo(GrupoCartas contador) {
+        // se toma el arreglo de índices de cartas del grupo y se marcan como no punteables
+        int[] indexCartas = contador.getIndexes();
+
+        for (int i = 0; i < contador.getMaxIndex(); i++) {
+            cartas[indexCartas[i]].setPunteable(false);
+        }
     }
 
     public String getEscaleras() {

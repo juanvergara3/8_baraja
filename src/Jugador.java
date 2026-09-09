@@ -6,9 +6,10 @@ import enums.NombreCarta;
 import enums.Pinta;
 import enums.Grupo;
 
+import static constants.Constantes.TOTAL_CARTAS;
+
 public class Jugador {
 
-    private final int TOTAL_CARTAS = 10;
     private final int MARGEN = 10;
     private final int DISTANCIA = 40;
 

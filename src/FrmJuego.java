@@ -5,6 +5,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import static constants.Constantes.TOTAL_CARTAS;
+
 public class FrmJuego extends JFrame {
 
     private JPanel pnlJugador1, pnlJugador2;

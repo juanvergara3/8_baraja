@@ -8,12 +8,14 @@ import javax.swing.JPanel;
 import enums.NombreCarta;
 import enums.Pinta;
 
+import static constants.Constantes.TAMAÑO_BARAJA;
+
 public class Carta {
     private int indice;
     private boolean punteable = true;
 
     public Carta(Random r) {
-        indice = r.nextInt(52) + 1;
+        indice = r.nextInt(TAMAÑO_BARAJA) + 1;
     }
 
     // overloading de constructor para crear cartas específicas en lugar de aleatorias

@@ -3,6 +3,7 @@ import java.util.Random;
 import javax.swing.JPanel;
 
 import enums.NombreCarta;
+import enums.Pinta;
 import enums.Grupo;
 
 public class Jugador {
@@ -45,6 +46,8 @@ public class Jugador {
                 hayGrupos = true;
         }
 
+        //TODO marcar cartas que formen grupos
+
         if (hayGrupos){
             respuesta = "Se han encontrado los siguientes grupos:\n";
             int index = 0;
@@ -58,32 +61,77 @@ public class Jugador {
         return respuesta;
     }
 
-    // este método toma un approch muy parecido al de getGrupos, para que se reinventar la rueda?
     public String getEscaleras() {
         String respuesta = "No se han encontrado escaleras.";
 
-        // int[] contadores = new int[NombreCarta.values().length];
+        // se crean los arreglos como matrices de 13x2, donde la primera columna es el nombre de la carta y la segunda columna es el índice de la carta en el arreglo de cartas del jugador. Este último se usa para marcar las cartas que hacen parte de la escalera
+        int escalerasTrebol[][] = new int[13][2];
+        int escalerasPica[][] = new int[13][2];
+        int escalerasCorazon[][] = new int[13][2];
+        int escalerasDiamante[][] = new int[13][2];
 
-        // boolean hayEscaleras = false;
-        // for (Carta crt: cartas) {
-        //     int posicion = crt.getNombre().ordinal();
-        //     contadores[posicion]++;
+        // se clasifican las cartas por pinta y al mismo tiempo se ordenan por nombre
+        for (int i = 0; i < TOTAL_CARTAS; i++) {
+            Carta crt = cartas[i];
+            switch (crt.getPinta()) {
+                case TREBOL:
+                    escalerasTrebol[crt.getNombre().ordinal()][0] = crt.getNombre().ordinal();
+                    escalerasTrebol[crt.getNombre().ordinal()][1] = i;
+                    break;
+                case PICA:
+                    escalerasPica[crt.getNombre().ordinal()][0] = crt.getNombre().ordinal();
+                    escalerasPica[crt.getNombre().ordinal()][1] = i;
+                    break;
+                case CORAZON:
+                    escalerasCorazon[crt.getNombre().ordinal()][0] = crt.getNombre().ordinal();
+                    escalerasCorazon[crt.getNombre().ordinal()][1] = i;
+                    break;
+                case DIAMANTE:
+                    escalerasDiamante[crt.getNombre().ordinal()][0] = crt.getNombre().ordinal();
+                    escalerasDiamante[crt.getNombre().ordinal()][1] = i;
+                    break;
+            }
+        }
 
-        //     if (!hayEscaleras && contadores[posicion] >= 2) 
-        //         hayEscaleras = true;
-        // }
+        String escalera = getEscalerasHelper(escalerasTrebol, Pinta.TREBOL) + 
+                          getEscalerasHelper(escalerasPica, Pinta.PICA) + 
+                          getEscalerasHelper(escalerasCorazon, Pinta.CORAZON) + 
+                          getEscalerasHelper(escalerasDiamante, Pinta.DIAMANTE);
 
-        // if (hayEscaleras){
-        //     respuesta = "Se han encontrado las siguientes escaleras:\n";
-        //     int index = 0;
-        //     for (int contador : contadores) {
-        //         if (contador >= 2) 
-        //             respuesta += Grupo.values()[contador] + " de " + NombreCarta.values()[index] + "\n";
-        //         index++;
-        //     }
-        // }
+        if (!escalera.isEmpty())
+            respuesta = "Se han encontrado las siguientes escaleras:\n" + escalera;
 
         return respuesta;
+    }
+
+    private String getEscalerasHelper(int[][] escaleras, Pinta pinta) {
+        String escalera = "";
+        // se itera sobre el arreglo que se llenó con los nombres de las cartas por pica
+        for(int i = 0; i < 13; i++) {
+
+            // si el valor del arreglo es diferente de cero, y el siguiente valor es diferente de cero, se ha encontrado una escalera
+            // se pone una condición i!= 12 para evitar un error de índice fuera de rango
+            if (i!= 12 && escaleras[i][0] != 0 && escaleras[i+1][0] != 0) {
+                // se inicializa la escalera 
+                escalera += pinta + ": ";
+                // se define una variable que va a ser el nuevo i cuando la escalera termine
+                int new_i = i;
+                // se recorre el arreglo hasta el final o hasta que el valor actual sea cero (se termine la escalera)
+                for(int j = i; j < 13 && escaleras[j][0] != 0; j++) {
+                    // se agrega la carta a la escalera
+                    escalera += NombreCarta.values()[j] + "";
+                    cartas[escaleras[j][1]].setPunteable(false);
+                    // se agrega una flecha si no es la última carta de la escalera
+                    if (j != 12 && escaleras[j+1][0] != 0) 
+                        escalera += "->";
+                    // se actualiza el nuevo i para que cuando termine la escalera, el for principal continue desde la última carta de la escalera
+                    new_i = j+1;
+                }
+                escalera += "\n";
+                i = new_i;
+            }
+        }
+        return escalera;
     }
 
     public String getPuntaje() {

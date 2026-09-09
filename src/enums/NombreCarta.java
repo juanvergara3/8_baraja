@@ -2,7 +2,7 @@ package enums;
 
 // se modifica este enum para asignarle un valor numérico a cada carta. Se usa para calcular los puntajes de cada jugador.
 public enum NombreCarta {
-    A(10),
+    AS(10),
     DOS(2),
     TRES(3),
     CUATRO(4),

@@ -123,6 +123,9 @@ public class Jugador {
 
     private String getEscalerasHelper(int[][] escaleras, Pinta pinta) {
         String escalera = "";
+        String temp = "";
+        // contador que se usa para contar cuántas cartas hay en la escalera, y así poder determinar si es un par, una terna, etc.
+        int contador = 0;
         int numeroCartas = NombreCarta.values().length;
         // se itera sobre el arreglo que se llenó con los nombres de las cartas por pica
         for(int i = 0; i < numeroCartas; i++) {
@@ -131,21 +134,23 @@ public class Jugador {
             // se pone una condición i!= 12 para evitar un error de índice fuera de rango
             if (i!= 12 && escaleras[i][0] != 0 && escaleras[i+1][0] != 0) {
                 // se inicializa la escalera 
-                escalera += pinta + ": ";
+                temp += pinta + ": ";
                 // se define una variable que va a ser el nuevo i cuando la escalera termine
                 int new_i = i;
                 // se recorre el arreglo hasta el final o hasta que el valor actual sea cero (se termine la escalera)
                 for(int j = i; j < numeroCartas && escaleras[j][0] != 0; j++) {
                     // se agrega la carta a la escalera
-                    escalera += NombreCarta.values()[j] + "";
+                    temp += NombreCarta.values()[j] + "";
                     cartas[escaleras[j][1]].setPunteable(false);
+                    // se suma 1 al contador de cartas en la escalera
+                    contador++;
                     // se agrega una flecha si no es la última carta de la escalera
                     if (j != numeroCartas - 1 && escaleras[j+1][0] != 0) 
-                        escalera += "->";
+                        temp += "->";
                     // se actualiza el nuevo i para que cuando termine la escalera, el for principal continue desde la última carta de la escalera
                     new_i = j+1;
                 }
-                escalera += "\n";
+                escalera += Grupo.values()[contador] + " de " + temp + "\n";
                 i = new_i;
             }
         }

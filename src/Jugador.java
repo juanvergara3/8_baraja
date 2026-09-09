@@ -22,6 +22,10 @@ public class Jugador {
         }
     }
 
+    public void entregarCartas(Carta[] cartas) {
+        this.cartas = cartas;
+    }
+
     public void mostrar(JPanel pnl) {
         pnl.removeAll();
         int posX = MARGEN + (DISTANCIA * (TOTAL_CARTAS - 1));

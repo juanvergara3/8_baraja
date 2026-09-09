@@ -1,5 +1,6 @@
 import java.awt.Color;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -14,6 +15,7 @@ public class FrmJuego extends JFrame {
     Jugador jugador2 = new Jugador();
     JTabbedPane tpJugadores;
     JButton btnVerificar, btnPuntaje;
+    private Baraja baraja = new Baraja();
 
 
     public FrmJuego() {
@@ -21,21 +23,27 @@ public class FrmJuego extends JFrame {
         setSize(500, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
+
+        JComboBox<String> cmbTipoReparto = new JComboBox<>();
+        cmbTipoReparto.addItem("Baraja cerrada");
+        cmbTipoReparto.addItem("Baraja abierta");
+        cmbTipoReparto.setBounds(10, 10, 120, 25);
+        add(cmbTipoReparto);
         
         JButton btnRepartir = new JButton("Repartir");
-        btnRepartir.setBounds(10, 10, 100, 25);
+        btnRepartir.setBounds(140, 10, 80, 25);
         add(btnRepartir);
 
         // El botón está deshabilitado hasta que se haga la repartición de cartas
         // Este era un error en el código original, si de daba click en el botón de verificar antes de repartir, se lanzaba una excepción porque el arreglo de cartas estaba vacío.
         btnVerificar = new JButton("Verificar");
-        btnVerificar.setBounds(120, 10, 100, 25);
+        btnVerificar.setBounds(230, 10, 90, 25);
         btnVerificar.setEnabled(false);
         add(btnVerificar);
 
         // El botón está deshabilitado inicialmente y se habilitará después de repartir las cartas y verificar los grupos y escaleras
         btnPuntaje = new JButton("Calcular Puntajes");
-        btnPuntaje.setBounds(230, 10, 150, 25);
+        btnPuntaje.setBounds(330, 10, 140, 25);
         btnPuntaje.setEnabled(false);
         add(btnPuntaje);
 
@@ -57,7 +65,11 @@ public class FrmJuego extends JFrame {
         //eventos
 
         btnRepartir.addActionListener(e -> {
-            repartir();
+            if (cmbTipoReparto.getSelectedIndex() == 0) {
+                repartir_baraja_cerrada();
+            } else {
+                repartir_baraja_abierta();
+            }
         });
 
         btnVerificar.addActionListener(e -> {
@@ -67,9 +79,14 @@ public class FrmJuego extends JFrame {
         btnPuntaje.addActionListener(e -> {
             calcularPuntajes();
         });
+
+        tpJugadores.addChangeListener(e -> {
+            // Deshabilitar el botón de calcular puntajes al cambiar de jugador
+            btnPuntaje.setEnabled(false);
+        });
     }
 
-    private void repartir() {
+    private void repartir_baraja_abierta() {
         jugador1.repartirCartas();
         jugador1.mostrar(pnlJugador1);
         
@@ -81,6 +98,29 @@ public class FrmJuego extends JFrame {
 
         // si se está repartiendo nuevamente, se deshabilita el botón de calcular puntajes para evitar que se calculen puntajes de una mano anterior
         btnPuntaje.setEnabled(false); 
+    }
+
+    private void repartir_baraja_cerrada() {
+        baraja.reiniciarBaraja(); // Reinicia la baraja antes de repartir las cartas
+
+        Carta[] cartasJugador1 = baraja.tomarCartas(TOTAL_CARTAS);
+        Carta[] cartasJugador2 = baraja.tomarCartas(TOTAL_CARTAS);
+
+        if (cartasJugador1 != null && cartasJugador2 != null) {
+            jugador1.entregarCartas(cartasJugador1);
+            jugador1.mostrar(pnlJugador1);
+
+            jugador2.entregarCartas(cartasJugador2);
+            jugador2.mostrar(pnlJugador2);
+
+            // Habilitar el botón de verificar después de repartir las cartas
+            btnVerificar.setEnabled(true);
+
+            // si se está repartiendo nuevamente, se deshabilita el botón de calcular puntajes para evitar que se calculen puntajes de una mano anterior
+            btnPuntaje.setEnabled(false); 
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay suficientes cartas disponibles para repartir.");
+        }
     }
 
     private void verificar() {

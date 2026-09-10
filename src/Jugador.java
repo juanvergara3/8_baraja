@@ -92,6 +92,18 @@ public class Jugador {
         int escalerasCorazon[][] = new int[numeroCartas][2];
         int escalerasDiamante[][] = new int[numeroCartas][2];
 
+        // se llenan los arreglos con -1 para indicar que no hay carta en esa posición y no confundirse con los AS (ordinal 0)
+        for (int i = 0; i < numeroCartas; i++) {
+            escalerasTrebol[i][0] = -1;
+            escalerasTrebol[i][1] = -1;
+            escalerasPica[i][0] = -1;
+            escalerasPica[i][1] = -1;
+            escalerasCorazon[i][0] = -1;
+            escalerasCorazon[i][1] = -1;
+            escalerasDiamante[i][0] = -1;
+            escalerasDiamante[i][1] = -1;
+        }
+
         // se clasifican las cartas por pinta y al mismo tiempo se ordenan por nombre
         for (int i = 0; i < TOTAL_CARTAS; i++) {
             Carta crt = cartas[i];
@@ -134,28 +146,28 @@ public class Jugador {
         int numeroCartas = NombreCarta.values().length;
         // se itera sobre el arreglo que se llenó con los nombres de las cartas por pica
         for(int i = 0; i < numeroCartas; i++) {
-
-            // si el valor del arreglo es diferente de cero, y el siguiente valor es diferente de cero, se ha encontrado una escalera
+            // si el valor del arreglo es diferente de -1, y el siguiente valor es diferente de -1, se ha encontrado una escalera
             // se pone una condición i!= 12 para evitar un error de índice fuera de rango
-            if (i!= 12 && escaleras[i][0] != 0 && escaleras[i+1][0] != 0) {
-                // se inicializa la escalera 
-                temp += pinta + ": ";
+            if (i!= 12 && escaleras[i][0] != -1 && escaleras[i+1][0] != -1) {
                 // se define una variable que va a ser el nuevo i cuando la escalera termine
                 int new_i = i;
-                // se recorre el arreglo hasta el final o hasta que el valor actual sea cero (se termine la escalera)
-                for(int j = i; j < numeroCartas && escaleras[j][0] != 0; j++) {
+                // se recorre el arreglo hasta el final o hasta que el valor actual sea -1 (se termine la escalera)
+                for(int j = i; j < numeroCartas && escaleras[j][0] != -1; j++) {
                     // se agrega la carta a la escalera
-                    temp += NombreCarta.values()[j] + "";
+                    temp += NombreCarta.values()[j];
                     cartas[escaleras[j][1]].setPunteable(false);
-                    // se suma 1 al contador de cartas en la escalera
+                    // se suma 1 al contador de cartas en la escalera       
                     contador++;
                     // se agrega una flecha si no es la última carta de la escalera
-                    if (j != numeroCartas - 1 && escaleras[j+1][0] != 0) 
+                    if (j != numeroCartas - 1 && escaleras[j+1][0] != -1) 
                         temp += "->";
                     // se actualiza el nuevo i para que cuando termine la escalera, el for principal continue desde la última carta de la escalera
                     new_i = j+1;
                 }
-                escalera += Grupo.values()[contador] + " de " + temp + "\n";
+                escalera += Grupo.values()[contador] + " de " + pinta + ": " + temp + "\n";
+                // se reinicia temp y el contador en caso de que haya otra escalera en la misma pinta
+                temp = "";
+                contador = 0;
                 i = new_i;
             }
         }

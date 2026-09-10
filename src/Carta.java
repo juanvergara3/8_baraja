@@ -64,4 +64,9 @@ public class Carta {
     public void setPunteable(boolean punteable) {
         this.punteable = punteable;
     }
+
+    // se usa solo para imprimir la baraja en consola
+    public int getIndice() {
+        return indice;
+    }
 }

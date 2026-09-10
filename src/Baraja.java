@@ -3,26 +3,37 @@ import java.util.Random;
 import static constants.Constantes.TAMAÑO_BARAJA;
 
 public class Baraja {
-    private Carta[] cartas = new Carta[TAMAÑO_BARAJA];
+    private Carta[] cartas;
     private Random r = new Random();
     private int cartasDisponibles;
 
-    public Baraja() {
-        inicializarBaraja();
+    public Baraja(int cantidadBarajas) {
+        cartasDisponibles = TAMAÑO_BARAJA * cantidadBarajas;
+        // se inicializa el array de cartas con el tamaño correspondiente al número de barajas
+        cartas = new Carta[cartasDisponibles];
+        inicializarBaraja(cantidadBarajas);
     }
 
-    private void inicializarBaraja() {
-        // Este método reinicia la baraja a su estado original, con todas las cartas disponibles
-        cartasDisponibles = TAMAÑO_BARAJA;
-        for (int i = 0; i < TAMAÑO_BARAJA; i++) {
-            cartas[i] = new Carta(i + 1);
+    private void inicializarBaraja(int cantidadBarajas) {
+        int counter = 0;
+
+        for (int i = 0; i < cantidadBarajas; i++) 
+            for (int j = 0; j < TAMAÑO_BARAJA; j++) {
+                cartas[counter] = new Carta(j + 1);
+                counter++;
+            }
+
+        // se deja este método para mostrar la baraja en consola
+        // le facilito la revisión un poquito profe :P
+        mostrar();
+    }
+
+    private void mostrar() {
+        System.out.println("Cartas disponibles: " + cartasDisponibles);
+        for (int i = 0; i < cartas.length; i++) {
+            System.out.println(i + ": " + cartas[i].getNombre() + " de " + cartas[i].getPinta() + " (#: " + cartas[i].getIndice() + ")");
         }
-    }
-
-    public void reiniciarBaraja() {
-        // se hace este check para verificar si la baraja ya ha sido inicializada, si no lo ha sido, se inicializa
-        if (cartasDisponibles != TAMAÑO_BARAJA)
-            inicializarBaraja();
+        System.out.println("--------------------------------------------------");
     }
 
     public Carta[] tomarCartas(int cantidad) {
@@ -33,9 +44,15 @@ public class Baraja {
             return null;
         }
 
+        System.out.println("Cartas tomadas: " + cantidad);
+
         for (int i = 0; i < cantidad; i++) {
             // se genera un índice aleatorio entre 0 y cartasDisponibles - 1
             int indice = r.nextInt(0, cartasDisponibles - 1);
+
+            // Esto muestra que cartas se toman del array cuando se reparten, facilita la revisión del código :PPP
+            // NOTA: el '# en la baraja' puede aparecer repetido por la forma como está diseñado el método, pues se toma una carta aleatoria y se reemplaza por la última carta disponible, es decir, es técnicamente posible que toda las cartas tomen el mismo # en la baraja mientras que este sea <= cantidad de cartas disponibles -  cantidad de cartas que se toman.
+            System.out.println(i + ": " + cartas[indice].getNombre() + " de " + cartas[indice].getPinta() + " (#: " + cartas[indice].getIndice() + ") [ # en la baraja: " + indice + "]");
 
             // se toma una carta
             cartasTomadas[i] = cartas[indice];
@@ -47,6 +64,8 @@ public class Baraja {
             // finalmente se decrementa el contador de cartas disponibles
             cartasDisponibles--;
         }
+        System.out.println("Cartas disponibles después de repartir: " + cartasDisponibles);
+        System.out.println("--------------------------------------------------");
 
         return cartasTomadas;
     }
